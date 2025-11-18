@@ -1,0 +1,6 @@
+numpy
+numba
+multiprocess
+matplotlib
+plotly
+interplot
