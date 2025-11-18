@@ -1,1 +1,2 @@
 [![Binder](https://mybinder.org/badge_logo.svg)](https://mybinder.org/v2/gh/janjoch/mt_signal_processing/HEAD?urlpath=%2Fdoc%2Ftree%2FU04_2_fourier.ipynb)
+[![NBViewer](https://raw.githubusercontent.com/jupyter/design/master/logos/Badges/nbviewer_badge.svg)](https://nbviewer.org/github/janjoch/mt_signal_processing/blob/master/U04_2_fourier.ipynb)

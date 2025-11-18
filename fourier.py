@@ -7,18 +7,15 @@ from matplotlib.patches import Arrow
 
 import pandas as pd
 
-import numba as nb
-
 import interplot as ip
 
 
-@nb.jit(parallel=True)
 def dft(X):
     N = len(X)
     n = np.arange(N)
     Y = np.empty(N, dtype="complex128")
 
-    for k in nb.prange(N):
+    for k in range(N):
         Y[k] = np.sum(X * np.exp(-2 * np.pi * 1j * k * n / N))
 
     return Y
@@ -68,13 +65,12 @@ def fft_p(X):
     )
 
 
-@nb.jit(parallel=True)
 def idft(X):
     N = len(X)
     n = np.arange(N)
     Y = np.empty(N, dtype="complex128")
 
-    for k in nb.prange(N):
+    for k in range(N):
         Y[k] = np.sum(X * np.exp(2 * np.pi * 1j * k * n / N)) / N
 
     return Y
