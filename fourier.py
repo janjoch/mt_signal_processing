@@ -1,9 +1,4 @@
-from multiprocess import Pool
-
 import numpy as np
-
-import matplotlib.pyplot as plt
-from matplotlib.patches import Arrow
 
 import pandas as pd
 
@@ -36,29 +31,6 @@ def fft(X):
     Y2 = fft(X2)
 
     n = np.arange(N // 2)
-    return np.append(
-        Y1 + np.exp(-np.pi * 1j / (N // 2) * n) * Y2,
-        Y1 - np.exp(-np.pi * 1j / (N // 2) * n) * Y2,
-    )
-
-
-# Note: this doesn't work recursively, since pool tasks can't have children
-def fft_p(X):
-    N = len(X)
-    if N <= 64:
-        return dft(X)
-
-    if N % 2:
-        return dft(X)
-
-    X1 = X[::2]
-    X2 = X[1::2]
-
-    Y1 = fft_p(X1)
-    Y2 = fft_p(X2)
-
-    n = np.arange(N // 2)
-
     return np.append(
         Y1 + np.exp(-np.pi * 1j / (N // 2) * n) * Y2,
         Y1 - np.exp(-np.pi * 1j / (N // 2) * n) * Y2,
@@ -215,41 +187,31 @@ class Fourier:
             comp_mode=self.comp_mode,
         )
 
+    @ip.magic_plot
     def plot_x(self, fig=None, **kwargs):
-        fig = ip.Plot.init(
-            fig=fig,
-        )
         fig.add_line(self.x, **kwargs)
-        return fig
 
+    @ip.magic_plot
     def plot_X(self, comp_mode=None, fig=None, **kwargs):
-        fig = ip.Plot.init(
-            fig=fig,
-        )
         if comp_mode is None:
             comp_mode = self.comp_mode
         fig.add_line(comp_mode(self.X), **kwargs)
-        return fig
 
+    @ip.magic_plot_preset(
+        xlabel="t / s",
+        ylabel="amplitude",
+    )
     def plot_t(self, fig=None, **kwargs):
-        fig = ip.Plot.init(
-            fig=fig,
-            xlabel="t / s",
-            ylabel="amplitude",
-        )
         fig.add_line(self.t, self.x, **kwargs)
-        return fig
 
+    @ip.magic_plot_preset(
+        xlabel="f / Hz",
+        ylabel="amplitude",
+    )
     def plot_f(self, comp_mode=None, slc=slice(None), fig=None, **kwargs):
-        fig = ip.Plot.init(
-            fig=fig,
-            xlabel="f / Hz",
-            ylabel="amplitude",
-        )
         if comp_mode is None:
             comp_mode = self.comp_mode
         fig.add_line(self.f[slc], comp_mode(self.Xmp)[slc], **kwargs)
-        return fig
 
     def plot_fp(self, *args, **kwargs):
         return self.plot_f(*args, slc=slice(self.N // 2, None), **kwargs)
@@ -257,16 +219,14 @@ class Fourier:
     def plot_fm(self, *args, **kwargs):
         return self.plot_f(*args, slc=slice(None, self.N // 2), **kwargs)
 
+    @ip.magic_plot_preset(
+        xlabel="sigma / ppm",
+        ylabel="amplitude",
+    )
     def plot_ppm(self, comp_mode=None, slc=slice(None), fig=None, **kwargs):
-        fig = ip.Plot.init(
-            fig=fig,
-            xlabel="sigma / ppm",
-            ylabel="amplitude",
-        )
         if comp_mode is None:
             comp_mode = self.comp_mode
         fig.add_line(self.ppm[slc], comp_mode(self.Xmp)[slc], **kwargs)
-        return fig
 
     def plot_ppmp(self, *args, **kwargs):
         return self.plot_ppm(*args, slc=slice(self.N // 2, None), **kwargs)

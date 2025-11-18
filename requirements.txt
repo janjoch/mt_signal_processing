@@ -1,5 +1,4 @@
 numpy
-multiprocess
 matplotlib
 plotly
 interplot
